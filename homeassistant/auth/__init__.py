@@ -665,20 +665,22 @@ class AuthManager:
         )
 
         if refresh_token is None:
-            jwt_key = ""
-            issuer = ""
-        else:
-            jwt_key = refresh_token.jwt_key
-            issuer = refresh_token.id
+            # PyJWT 2.13 rejects empty HMAC keys. Once the token issuer no
+            # longer maps to a refresh token, the access token cannot be valid.
+            return None
 
         try:
             jwt_wrapper.verify_and_decode(
-                token, jwt_key, leeway=10, issuer=issuer, algorithms=["HS256"]
+                token,
+                refresh_token.jwt_key,
+                leeway=10,
+                issuer=refresh_token.id,
+                algorithms=["HS256"],
             )
         except jwt.InvalidTokenError:
             return None
 
-        if refresh_token is None or not refresh_token.user.is_active:
+        if not refresh_token.user.is_active:
             return None
 
         return refresh_token
