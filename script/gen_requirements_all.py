@@ -65,9 +65,11 @@ CONSTRAINT_BASE = """
 # see https://github.com/home-assistant/core/pull/16238
 pycryptodome>=3.6.6
 
-# Constrain httplib2 to protect against GHSA-93xj-8mrv-444m
+# Constrain httplib2 to protect against GHSA-93xj-8mrv-444m and
+# GHSA-j5g9-f88f-gfj3
 # https://github.com/advisories/GHSA-93xj-8mrv-444m
-httplib2>=0.19.0
+# https://github.com/advisories/GHSA-j5g9-f88f-gfj3
+httplib2>=0.32.0
 
 # gRPC is an implicit dependency that we want to make explicit so we manage
 # upgrades intentionally. It is a large package to build from source and we
@@ -96,7 +98,7 @@ uuid==1000000000.0.0
 # even newer versions seem to introduce new issues, it's useful
 # for us to pin all these
 # requirements so we can directly link HA versions to these library versions.
-anyio==4.13.0
+anyio==4.14.2
 h11==0.16.0
 httpcore==1.0.9
 
@@ -131,7 +133,7 @@ iso4217!=1.10.20220401
 
 # protobuf must be in package constraints for the wheel
 # builder to build binary wheels
-protobuf==6.32.0
+protobuf==6.33.6
 
 # faust-cchardet: Ensure we have a version we can build wheels
 # 2.1.18 is the first version that works with our wheel builder
@@ -223,9 +225,6 @@ aiofile==3.9.0
 # https://github.com/auth0/auth0-python/releases/tag/5.0.0
 auth0-python<5.0
 
-# Setuptools >=82.0.0 doesn't contain pkg_resources anymore
-setuptools<82.0.0
-
 # backoff and python-backoff share the same package name
 # pin versions which are mostly compatible to each other
 backoff==2.2.1
@@ -238,7 +237,7 @@ python-backoff<2.4.0
 azure-kusto-data==4.5.1
 azure-kusto-ingest==4.5.1
 coloredlogs==15.0.1
-setuptools==81.0.0
+setuptools==84.0.0
 
 # Pin cffi to 2.0.0 to avoid version mismatch with the pre-baked _cffi_backend in the base image.
 # https://github.com/home-assistant/core/issues/175832

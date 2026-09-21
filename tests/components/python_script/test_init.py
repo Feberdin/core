@@ -185,6 +185,25 @@ hass.async_stop()
     assert "Not allowed to access async methods" in str(task.exception())
 
 
+async def test_rejects_guard_shadowing_in_positional_only_argument(
+    hass: HomeAssistant, caplog: pytest.LogCaptureFixture
+) -> None:
+    """Test positional-only arguments cannot replace a sandbox guard."""
+    source = """
+def bypass(obj, _getattr_=lambda obj, name: "shadowed", /):
+    return obj.async_create_task
+output["result"] = bypass(hass)
+    """
+
+    await hass.async_add_executor_job(execute, hass, "test.py", source, {})
+    await hass.async_block_till_done()
+
+    assert (
+        '"_getattr_" is an invalid variable name because it starts with "_"'
+        in caplog.text
+    )
+
+
 async def test_using_complex_structures(
     hass: HomeAssistant, caplog: pytest.LogCaptureFixture
 ) -> None:
